@@ -63,8 +63,10 @@ namespace MedConnectBot {
     public sealed class MessagesSettings {
         public string ForwardPattern { get; private set; }
         public string NewRecipientPattern { get; private set; }
+        public string UnknownCommandPattern { get; private set; }
         public string ChooseYourRecipientMessage { get; private set; }
         public string NoRoomsMessage { get; private set; }
+        public string HelpMessage { get; private set; }
     }
 
     public sealed class ConfigException : Exception {

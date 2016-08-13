@@ -21,9 +21,11 @@ namespace MedConnectBot {
             Bot_ = new TelegramBotClient(BotConfig.Data.Telegram.AccessToken);
         }
 
+        private static readonly char[] TrimChars_ = {' ', '\t', '\n', '\r'};
+
         private static async void OnMessage(object sender, MessageEventArgs args) {
             long id = args.Message.Chat.Id;
-            string text = args.Message.Text;
+            string text = args.Message.Text.TrimStart(TrimChars_).TrimEnd(TrimChars_);
             var data = new BotContextData() {
                 Message = args.Message,
                 Id = id,
