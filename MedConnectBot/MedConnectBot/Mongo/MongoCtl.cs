@@ -49,15 +49,13 @@ namespace MedConnectBot.Mongo {
             return res.ToArray();
         }
 
-        public async Task<bool> CheckSalt(string salt) {
-            bool result = false;
+        public async Task<string> GetSalt() {
+            string salt = null;
             await Process(Config_, EmptyFilter_, (BsonDocument doc) => {
                 string docSalt = doc.GetValue("salt").AsString;
-                if (docSalt == salt) {
-                    result = true;
-                }
+                salt = docSalt;
             });
-            return result;
+            return salt;
         }
 
         public Task<Room[]> FindRooms(long telegramId) {

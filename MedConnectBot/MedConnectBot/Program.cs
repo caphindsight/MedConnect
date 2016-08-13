@@ -38,7 +38,7 @@ namespace MedConnectBot {
 
         public static void Main(string[] args) {
             Console.WriteLine("Checking mongo connection..");
-            if (!Mongo_.CheckSalt(BotConfig.Data.Mongo.Salt).Result) {
+            if (Mongo_.GetSalt().Result != BotConfig.Data.Mongo.Salt) {
                 throw new Exception("Invalid salt in mongo configuration");
             }
 
