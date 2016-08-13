@@ -88,10 +88,10 @@ namespace MedConnectBot.Tele {
                 await SendText(Data.Id, BotConfig.Data.Messages.NoRoomsMessage);
             } else if (Data.Text == "/start" || Data.Text == "/help") {
                 await SendText(Data.Id, BotConfig.Data.Messages.HelpMessage);
-            } else if (Data.Text.StartsWith("/")) {
-                await SendText(Data.Id, UnknownCommandMessageText(Data.Text));
             } else if (Data.Text == "/chat") {
                 await ReplyKeyboard(rooms);
+            } else if (Data.Text.StartsWith("/")) {
+                await SendText(Data.Id, UnknownCommandMessageText(Data.Text));
             } else {
                 foreach (Room room in rooms) {
                     string localTitle = room.GetLocalTitle(Data.Id);
