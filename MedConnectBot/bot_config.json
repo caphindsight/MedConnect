@@ -3,6 +3,12 @@
         "Host" : "localhost",
         "Port" : "32000",
         "Database" : "MedConnectDb",
-        "RequiresAuthorization" : "false"
-     }
+        "RequiresAuthorization" : "false",
+        "Salt" : "debug"
+    },
+
+    "Telegram" : {
+        "AccessToken" : "208777973:AAHnRY1F2IfoZRFgBaawTnCt43DmmPvTdSk",
+        "ForwardPattern" : "{name} writes:\n{text}"
+    }
 }

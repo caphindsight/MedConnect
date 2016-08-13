@@ -13,6 +13,7 @@ namespace MedConnectBot.Mongo {
             Client_ = new MongoClient(connectionString);
             Database_ = Client_.GetDatabase(database);
 
+            Config_ = Database_.GetCollection<BsonDocument>("config");
             Users_ = Database_.GetCollection<BsonDocument>("users");
             Rooms_ = Database_.GetCollection<BsonDocument>("rooms");
         }
@@ -22,6 +23,7 @@ namespace MedConnectBot.Mongo {
 
         private readonly BsonDocument EmptyFilter_ = new BsonDocument();
 
+        private readonly IMongoCollection<BsonDocument> Config_;
         private readonly IMongoCollection<BsonDocument> Users_;
         private readonly IMongoCollection<BsonDocument> Rooms_;
 
@@ -49,7 +51,61 @@ namespace MedConnectBot.Mongo {
             return res.ToArray();
         }
 
-        public Task<Room[]> FindRooms(string telegramId) {
+        public async Task<bool> CheckSalt(string salt) {
+            bool result = false;
+            await Process(Config_, EmptyFilter_, (BsonDocument doc) => {
+                string docSalt = doc.GetValue("salt").AsString;
+                if (docSalt == salt) {
+                    result = true;
+                }
+            });
+            return result;
+        }
+
+        public async Task<User> GetUser(long telegramId) {
+            var filter = new BsonDocument();
+            filter.Set("t_id", telegramId.ToString());
+
+            User[] users = await Collect<User>(Users_, filter, (BsonDocument doc) => {
+                long tid = Convert.ToInt64(doc.GetValue("t_id").AsString);
+                if (tid != telegramId) {
+                    throw new MongoException("Telegram id filter is not working somehow");
+                }
+
+                string name = doc.GetValue("name").AsString;
+                string roleStr = doc.GetValue("role").AsString;
+                UserRole role;
+
+                switch (roleStr) {
+                case "client":
+                    role = UserRole.Client;
+                    break;
+
+                case "doctor":
+                    role = UserRole.Doctor;
+                    break;
+
+                default:
+                    throw new MongoException($"Unknown user role: {roleStr}");
+                }
+
+                return new User() {
+                    TelegramId = tid,
+                    Name = name,
+                    Role = role,
+                };
+            });
+
+            if (users.Length == 0) {
+                return null;
+            } else if (users.Length == 1) {
+                return users[0];
+            } else {
+                throw new MongoException($"Found duplicate user with telegram id {telegramId}");
+            }
+        }
+
+        public Task<Room[]> FindRooms(long telegramId) {
             return Collect<Room>(Rooms_, EmptyFilter_, (BsonDocument doc) => {
                 bool admit = false;
 
@@ -58,7 +114,7 @@ namespace MedConnectBot.Mongo {
 
                 BsonArray bsonMembers = doc.GetValue("members").AsBsonArray;
                 foreach (BsonValue bsonMember in bsonMembers) {
-                    string tid = bsonMember.AsBsonDocument.GetValue("t_id").AsString;
+                    long tid = Convert.ToInt64(bsonMember.AsBsonDocument.GetValue("t_id").AsString);
                     members.Add(new RoomMember() {
                         TelegramId = tid,
                     });
@@ -78,5 +134,11 @@ namespace MedConnectBot.Mongo {
                 }
             });
         }
+    }
+
+    public sealed class MongoException : Exception {
+        public MongoException(string msg)
+            : base(msg)
+        {}
     }
 }

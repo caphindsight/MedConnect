@@ -59,11 +59,13 @@
     <Compile Include="MedConnectBot\BotConfig.cs" />
     <Compile Include="MedConnectBot\Mongo\MongoCtl.cs" />
     <Compile Include="MedConnectBot\Mongo\DbModel.cs" />
+    <Compile Include="MedConnectBot\Tele\BotContext.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Folder Include="MedConnectBot\" />
     <Folder Include="MedConnectBot\Mongo\" />
+    <Folder Include="MedConnectBot\Tele\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

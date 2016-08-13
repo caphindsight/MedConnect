@@ -5,6 +5,7 @@ using System.Web.Script.Serialization;
 namespace MedConnectBot {
     public sealed class BotConfig {
         public MongoSettings Mongo { get; private set; }
+        public TelegramSettings Telegram { get; private set; }
 
         private static readonly JavaScriptSerializer Serializer_ =
             new JavaScriptSerializer();
@@ -27,14 +28,16 @@ namespace MedConnectBot {
     }
 
     public sealed class MongoSettings {
-        public string Host { get; set; }
-        public int Port { get; set; }
-        public string Database { get; set; }
+        public string Host { get; private set; }
+        public int Port { get; private set; }
+        public string Database { get; private set; }
 
-        public bool RequiresAuthorization { get; set; }
+        public bool RequiresAuthorization { get; private set; }
 
-        public string User { get; set; }
-        public string Password { get; set; }
+        public string User { get; private set; }
+        public string Password { get; private set; }
+
+        public string Salt { get; private set; }
 
         public string ConnectionString {
             get {
@@ -42,6 +45,11 @@ namespace MedConnectBot {
                 return $"mongodb://{auth}{Host}:{Port}/{Database}";
             }
         }
+    }
+
+    public sealed class TelegramSettings {
+        public string AccessToken { get; private set; }
+        public string ForwardPattern { get; private set; }
     }
 
     public sealed class ConfigException : Exception {
