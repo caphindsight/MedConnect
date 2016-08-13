@@ -24,6 +24,9 @@
         "UnknownCommandPattern" : "Unsupported command: {command}",
         "ChooseYourRecipientMessage" : "Please choose your recipient from the list below:",
         "NoRoomsMessage" : "Sorry, but you haven't been registered in MedConnect database.",
+        "OnlyDoctorsCanCloseDialogsMessage" : "Sorry, but only MedConnect doctors can close dialogs.",
+        "DoctorHasClosedTheDialogMessage" : "Your doctor has closed this dialog.\nGood bye!",
+        "DialogRemovedMessage" : "The dialog has been successfully closed!",
         "HelpMessage" : "Your ad can be here :)"
     }
 }

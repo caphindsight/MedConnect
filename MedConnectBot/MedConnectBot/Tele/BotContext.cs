@@ -47,17 +47,17 @@ namespace MedConnectBot.Tele {
             }
         }
 
-        private async Task SendText(long recipientId, string text) {
+        private async Task ReplyText(long recipientId, string text) {
             Message msg = await Bot.SendTextMessageAsync(recipientId, text);
             await ForwardToAdmin(recipientId, msg);
         }
 
-        private async Task Broadcast(Room room, long id) {
-            RoomMember[] us = (from member in room.Members where member.TelegramId == id select member).ToArray();
-            RoomMember[] others = (from member in room.Members where member.TelegramId != id select member).ToArray();
+        private async Task Broadcast(Room room, string text = null) {
+            RoomMember[] us = (from member in room.Members where member.TelegramId == Data.Id select member).ToArray();
+            RoomMember[] others = (from member in room.Members where member.TelegramId != Data.Id select member).ToArray();
 
             if (us.Length > 1)
-                throw new MongoException($"Duplicate room member {id} in room {room.RoomId}");
+                throw new MongoException($"Duplicate room member {Data.Id} in room {room.RoomId}");
 
             if (us.Length == 0)
                 throw new MongoException($"This should not happen, ever!");
@@ -65,8 +65,8 @@ namespace MedConnectBot.Tele {
             RoomMember me = us[0];
 
             foreach (RoomMember member in others) {
-                string forwardedText = ForwardMessageText(me.Name, Data.Text);
-                await SendText(member.TelegramId, forwardedText);
+                string forwardedText = text ?? ForwardMessageText(me.Name, Data.Text);
+                await ReplyText(member.TelegramId, forwardedText);
             }
         }
 
@@ -84,20 +84,46 @@ namespace MedConnectBot.Tele {
             Room[] rooms = await Mongo.FindRooms(Data.Id);
             Room currentRoom = GlobalCache.CurrentRoomCache.Get(Data.Id);
 
+            RoomMember me = null;
+            if (currentRoom != null) {
+                foreach (RoomMember member in currentRoom.Members) {
+                    if (member.TelegramId == Data.Id)
+                        me = member;
+                }
+            }
+
             if (rooms.Length == 0) {
-                await SendText(Data.Id, BotConfig.Data.Messages.NoRoomsMessage);
+                await ReplyText(Data.Id, BotConfig.Data.Messages.NoRoomsMessage);
             } else if (Data.Text == "/start" || Data.Text == "/help") {
-                await SendText(Data.Id, BotConfig.Data.Messages.HelpMessage);
-            } else if (Data.Text == "/chat") {
+                await ReplyText(Data.Id, BotConfig.Data.Messages.HelpMessage);
+            } else if (Data.Text == "/select") {
                 await ReplyKeyboard(rooms);
+            } else if (Data.Text == "/over") {
+                if (currentRoom == null) {
+                    await ReplyKeyboard(rooms);
+                    return;
+                }
+
+                if (me.Role != MemberRole.Doctor) {
+                    await ReplyText(Data.Id, BotConfig.Data.Messages.OnlyDoctorsCanCloseDialogsMessage);
+                    return;
+                }
+
+                try {
+                    await Broadcast(currentRoom, BotConfig.Data.Messages.DoctorHasClosedTheDialogMessage);
+                } catch {}
+
+                await Mongo.DeleteRoom(currentRoom.RoomId);
+
+                await ReplyText(Data.Id, BotConfig.Data.Messages.DialogRemovedMessage);
             } else if (Data.Text.StartsWith("/")) {
-                await SendText(Data.Id, UnknownCommandMessageText(Data.Text));
+                await ReplyText(Data.Id, UnknownCommandMessageText(Data.Text));
             } else {
                 foreach (Room room in rooms) {
                     string localTitle = room.GetLocalTitle(Data.Id);
                     if (localTitle == Data.Text) {
                         GlobalCache.CurrentRoomCache.Set(Data.Id, room);
-                        await SendText(Data.Id, NewRecipientMessageText(localTitle));
+                        await ReplyText(Data.Id, NewRecipientMessageText(localTitle));
                         return;
                     }
                 }
@@ -108,7 +134,7 @@ namespace MedConnectBot.Tele {
                 }
 
                 if (currentRoom != null) {
-                    await Broadcast(currentRoom, Data.Id);
+                    await Broadcast(currentRoom);
                 } else {
                     await ReplyKeyboard(rooms);
                 }

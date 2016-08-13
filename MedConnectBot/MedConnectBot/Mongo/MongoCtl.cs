@@ -14,7 +14,6 @@ namespace MedConnectBot.Mongo {
             Database_ = Client_.GetDatabase(database);
 
             Config_ = Database_.GetCollection<BsonDocument>("config");
-            Users_ = Database_.GetCollection<BsonDocument>("users");
             Rooms_ = Database_.GetCollection<BsonDocument>("rooms");
         }
 
@@ -24,7 +23,6 @@ namespace MedConnectBot.Mongo {
         private readonly BsonDocument EmptyFilter_ = new BsonDocument();
 
         private readonly IMongoCollection<BsonDocument> Config_;
-        private readonly IMongoCollection<BsonDocument> Users_;
         private readonly IMongoCollection<BsonDocument> Rooms_;
 
         private async Task Process(IMongoCollection<BsonDocument> collection, BsonDocument filter, Action<BsonDocument> action) {
@@ -109,6 +107,12 @@ namespace MedConnectBot.Mongo {
                     return null;
                 }
             });
+        }
+
+        public async Task DeleteRoom(string roomId) {
+            var filter = new BsonDocument();
+            filter.Set("r_id", roomId);
+            await Rooms_.DeleteOneAsync(filter);
         }
     }
 
