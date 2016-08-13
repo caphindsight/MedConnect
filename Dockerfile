@@ -1,8 +1,5 @@
-FROM ubuntu:16.04
+FROM mono
 MAINTAINER Cap. Hindsight <hindsight@yandex.ru>
-
-RUN apt-get update
-RUN apt-get install -y mono-complete nuget
 
 COPY . /MedConnect
 
