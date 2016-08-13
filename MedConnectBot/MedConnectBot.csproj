@@ -60,6 +60,7 @@
     <Compile Include="MedConnectBot\Mongo\MongoCtl.cs" />
     <Compile Include="MedConnectBot\Mongo\DbModel.cs" />
     <Compile Include="MedConnectBot\Tele\BotContext.cs" />
+    <Compile Include="MedConnectBot\Tele\Cache.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

@@ -36,8 +36,15 @@ namespace MedConnectBot.Tele {
         }
 
         public async Task Process() {
-            Room[] rooms = await Mongo.FindRooms(Data.Id);
-            MedConnectBot.Mongo.User user = await Mongo.GetUser(Data.Id);
+            MedConnectBot.Mongo.User user = await GlobalCache.UserCache.GetOrUpdate(Data.Id, (long id) => {
+                Console.WriteLine($"User cache query failed for {id}");
+                return Mongo.GetUser(id);
+            });
+
+            Room[] rooms = await GlobalCache.RoomCache.GetOrUpdate(Data.Id, (long id) => {
+                Console.WriteLine($"Rooms cache query failed for {id}");
+                return Mongo.FindRooms(id);
+            });
 
             if (user == null) {
                 await Bot.SendTextMessageAsync(Data.Id, "Sorry, but there is no record of you in our database");

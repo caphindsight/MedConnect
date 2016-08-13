@@ -6,6 +6,7 @@ namespace MedConnectBot {
     public sealed class BotConfig {
         public MongoSettings Mongo { get; private set; }
         public TelegramSettings Telegram { get; private set; }
+        public CachingSettings Caching { get; private set; }
 
         private static readonly JavaScriptSerializer Serializer_ =
             new JavaScriptSerializer();
@@ -45,6 +46,10 @@ namespace MedConnectBot {
                 return $"mongodb://{auth}{Host}:{Port}/{Database}";
             }
         }
+    }
+
+    public sealed class CachingSettings {
+        public double UserCacheInvalidationTimeMinutes { get; private set; }
     }
 
     public sealed class TelegramSettings {

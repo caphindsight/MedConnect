@@ -10,5 +10,9 @@
     "Telegram" : {
         "AccessToken" : "208777973:AAHnRY1F2IfoZRFgBaawTnCt43DmmPvTdSk",
         "ForwardPattern" : "{name} writes:\n{text}"
+    },
+
+    "Caching" : {
+        "UserCacheInvalidationTimeMinutes" : "5"
     }
 }
