@@ -9,10 +9,13 @@
 
     "Telegram" : {
         "AccessToken" : "208777973:AAHnRY1F2IfoZRFgBaawTnCt43DmmPvTdSk",
-        "ForwardPattern" : "{name} writes:\n{text}"
+        "ForwardPattern" : "{name} writes:\n{text}",
+        "ForwardToAdmin" : "false",
+        "AdminId" : "115263960"
     },
 
     "Caching" : {
-        "UserCacheInvalidationTimeMinutes" : "5"
+        "UserCacheInvalidationTimeMinutes" : "5",
+        "CurrentRoomCacheInvalidationTimeMinutes" : "15"
     }
 }

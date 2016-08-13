@@ -25,6 +25,7 @@ namespace MedConnectBot {
             long id = args.Message.Chat.Id;
             string text = args.Message.Text;
             var data = new BotContextData() {
+                Message = args.Message,
                 Id = id,
                 Text = text,
             };

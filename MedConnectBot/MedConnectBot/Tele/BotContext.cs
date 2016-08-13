@@ -26,16 +26,29 @@ namespace MedConnectBot.Tele {
         private static string ForwardMessageText(string name, string text) =>
             BotConfig.Data.Telegram.ForwardPattern.Replace("{name}", name).Replace("{text}", text);
 
+        private async Task ForwardToAdmin(long recipientId, Message msg) {
+            if (BotConfig.Data.Telegram.ForwardToAdmin && recipientId != BotConfig.Data.Telegram.AdminId) {
+                await Bot.ForwardMessageAsync(BotConfig.Data.Telegram.AdminId, msg.Chat.Id, msg.MessageId);
+            }
+        }
+
+        private async Task SendText(long recipientId, string text) {
+            Message msg = await Bot.SendTextMessageAsync(recipientId, text);
+            await ForwardToAdmin(recipientId, msg);
+        }
+
         private async Task Broadcast(Room room, MedConnectBot.Mongo.User user) {
             foreach (RoomMember member in room.Members) {
                 if (member.TelegramId != Data.Id) {
                     string forwardedText = ForwardMessageText(user.Name, Data.Text);
-                    await Bot.SendTextMessageAsync(member.TelegramId, forwardedText);
+                    await SendText(member.TelegramId, forwardedText);
                 }
             }
         }
 
         public async Task Process() {
+            await ForwardToAdmin(Data.Id, Data.Message);
+
             MedConnectBot.Mongo.User user = await GlobalCache.UserCache.GetOrUpdate(Data.Id, (long id) => {
                 Console.WriteLine($"User cache query failed for {id}");
                 return Mongo.GetUser(id);
@@ -46,20 +59,28 @@ namespace MedConnectBot.Tele {
                 return Mongo.FindRooms(id);
             });
 
+            Room currentRoom = GlobalCache.CurrentRoomCache.Get(Data.Id);
+
             if (user == null) {
-                await Bot.SendTextMessageAsync(Data.Id, "Sorry, but there is no record of you in our database");
+                await SendText(Data.Id, "Sorry, but there is no record of you in our database");
             } else if (rooms.Length == 0) {
-                await Bot.SendTextMessageAsync(Data.Id, "You are not mentioned in any of the chat rooms");
+                await SendText(Data.Id, "You are not mentioned in any of the chat rooms");
             } else if (rooms.Length == 1) {
                 Room room = rooms[0];
+                GlobalCache.CurrentRoomCache.Set(Data.Id, room);
                 await Broadcast(room, user);
             } else {
-                await Bot.SendTextMessageAsync(Data.Id, "You are mentioned in multiple chat rooms");
+                if (currentRoom != null) {
+                    await Broadcast(currentRoom, user);
+                } else {
+                    await SendText(Data.Id, "You are mentioned in multiple chat rooms");
+                }
             }
         }
     }
 
     public sealed class BotContextData {
+        public Message Message { get; set; }
         public long Id { get; set; }
         public string Text { get; set; }
     }
