@@ -9,13 +9,19 @@
 
     "Telegram" : {
         "AccessToken" : "208777973:AAHnRY1F2IfoZRFgBaawTnCt43DmmPvTdSk",
-        "ForwardPattern" : "{name} writes:\n{text}",
-        "ForwardToAdmin" : "false",
-        "AdminId" : "115263960"
+        "AdminId" : "115263960",
+        "ReportErrorsToAdmin" : "true",
+        "ForwardToAdmin" : "false"
     },
 
     "Caching" : {
-        "UserCacheInvalidationTimeMinutes" : "5",
         "CurrentRoomCacheInvalidationTimeMinutes" : "15"
+    },
+
+    "Messages" : {
+        "ForwardPattern" : "{name} writes:\n{text}",
+        "NewRecipientPattern" : "From now on your messages will be forwarded to {name} until you type /chat command.",
+        "ChooseYourRecipientMessage" : "Please choose your recipient from the list below:",
+        "NoRoomsMessage" : "Sorry, but you haven't been registered in MedConnect database."
     }
 }

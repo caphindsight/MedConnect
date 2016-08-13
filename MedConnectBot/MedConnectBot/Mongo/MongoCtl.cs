@@ -62,49 +62,6 @@ namespace MedConnectBot.Mongo {
             return result;
         }
 
-        public async Task<User> GetUser(long telegramId) {
-            var filter = new BsonDocument();
-            filter.Set("t_id", telegramId.ToString());
-
-            User[] users = await Collect<User>(Users_, filter, (BsonDocument doc) => {
-                long tid = Convert.ToInt64(doc.GetValue("t_id").AsString);
-                if (tid != telegramId) {
-                    throw new MongoException("Telegram id filter is not working somehow");
-                }
-
-                string name = doc.GetValue("name").AsString;
-                string roleStr = doc.GetValue("role").AsString;
-                UserRole role;
-
-                switch (roleStr) {
-                case "client":
-                    role = UserRole.Client;
-                    break;
-
-                case "doctor":
-                    role = UserRole.Doctor;
-                    break;
-
-                default:
-                    throw new MongoException($"Unknown user role: {roleStr}");
-                }
-
-                return new User() {
-                    TelegramId = tid,
-                    Name = name,
-                    Role = role,
-                };
-            });
-
-            if (users.Length == 0) {
-                return null;
-            } else if (users.Length == 1) {
-                return users[0];
-            } else {
-                throw new MongoException($"Found duplicate user with telegram id {telegramId}");
-            }
-        }
-
         public Task<Room[]> FindRooms(long telegramId) {
             return Collect<Room>(Rooms_, EmptyFilter_, (BsonDocument doc) => {
                 bool admit = false;
@@ -115,8 +72,27 @@ namespace MedConnectBot.Mongo {
                 BsonArray bsonMembers = doc.GetValue("members").AsBsonArray;
                 foreach (BsonValue bsonMember in bsonMembers) {
                     long tid = Convert.ToInt64(bsonMember.AsBsonDocument.GetValue("t_id").AsString);
+                    string name = bsonMember.AsBsonDocument.GetValue("name").AsString;
+                    string roleStr = bsonMember.AsBsonDocument.GetValue("role").AsString;
+
+                    MemberRole role;
+                    switch (roleStr) {
+                    case "client":
+                        role = MemberRole.Client;
+                        break;
+
+                    case "doctor":
+                        role = MemberRole.Doctor;
+                        break;
+
+                    default:
+                        throw new MongoException($"Unknown member role: '{roleStr}'");
+                    }
+
                     members.Add(new RoomMember() {
                         TelegramId = tid,
+                        Name = name,
+                        Role = role,
                     });
 
                     if (tid == telegramId) {

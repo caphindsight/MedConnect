@@ -7,6 +7,7 @@ namespace MedConnectBot {
         public MongoSettings Mongo { get; private set; }
         public TelegramSettings Telegram { get; private set; }
         public CachingSettings Caching { get; private set; }
+        public MessagesSettings Messages { get; private set; }
 
         private static readonly JavaScriptSerializer Serializer_ =
             new JavaScriptSerializer();
@@ -48,16 +49,22 @@ namespace MedConnectBot {
         }
     }
 
+    public sealed class TelegramSettings {
+        public string AccessToken { get; private set; }
+        public long AdminId { get; private set; }
+        public bool ReportErrorsToAdmin { get; private set; }
+        public bool ForwardToAdmin { get; private set; }
+    }
+
     public sealed class CachingSettings {
-        public double UserCacheInvalidationTimeMinutes { get; private set; }
         public double CurrentRoomCacheInvalidationTimeMinutes { get; private set; }
     }
 
-    public sealed class TelegramSettings {
-        public string AccessToken { get; private set; }
+    public sealed class MessagesSettings {
         public string ForwardPattern { get; private set; }
-        public bool ForwardToAdmin { get; private set; }
-        public long AdminId { get; private set; }
+        public string NewRecipientPattern { get; private set; }
+        public string ChooseYourRecipientMessage { get; private set; }
+        public string NoRoomsMessage { get; private set; }
     }
 
     public sealed class ConfigException : Exception {

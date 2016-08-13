@@ -7,12 +7,6 @@ using MedConnectBot.Mongo;
 
 namespace MedConnectBot.Tele {
     public static class GlobalCache {
-        public static readonly Cache<User> UserCache =
-            new Cache<User>(TimeSpan.FromMinutes(BotConfig.Data.Caching.UserCacheInvalidationTimeMinutes));
-
-        public static readonly Cache<Room[]> RoomCache =
-            new Cache<Room[]>(TimeSpan.MaxValue);
-
         public static readonly Cache<Room> CurrentRoomCache =
             new Cache<Room>(TimeSpan.FromMinutes(BotConfig.Data.Caching.CurrentRoomCacheInvalidationTimeMinutes));
     }
