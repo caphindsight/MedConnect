@@ -1,0 +1,8 @@
+﻿{
+    "Mongo" : {
+        "Host" : "localhost",
+        "Port" : "32000",
+        "Database" : "MedConnectDb",
+        "RequiresAuthorization" : "false"
+     }
+}
