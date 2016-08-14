@@ -8,7 +8,8 @@ using Telegram.Bot.Helpers;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
-using MedConnectBot.Mongo;
+using MedConnectMongoLib;
+
 using MedConnectBot.Tele;
 
 namespace MedConnectBot {

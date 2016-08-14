@@ -12,7 +12,7 @@ using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
 
-using MedConnectBot.Mongo;
+using MedConnectMongoLib;
 
 namespace MedConnectBot.Tele {
     public sealed class BotContext {

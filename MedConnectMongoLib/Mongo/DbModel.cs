@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace MedConnectBot.Mongo {
+namespace MedConnectMongoLib {
     public sealed class Room {
         public string RoomId { get; set; }
         public string LocalTitle { get; set; }

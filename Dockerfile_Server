@@ -1,0 +1,12 @@
+FROM mono
+MAINTAINER Cap. Hindsight <hindsight@yandex.ru>
+
+COPY . /MedConnect
+
+WORKDIR /MedConnect
+RUN nuget restore
+RUN xbuild /p:Configuration=Release
+
+WORKDIR /MedConnect/MedConnectServer/bin/Release
+CMD mono MedConnectServer.exe
+

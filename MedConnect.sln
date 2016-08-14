@@ -3,6 +3,10 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MedConnectBot", "MedConnectBot\MedConnectBot.csproj", "{6DE05D40-BDA1-4038-A1EC-8096C50739FA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MedConnectServer", "MedConnectServer\MedConnectServer.csproj", "{D2EB3B55-A157-43BF-A7E1-9C4B8D664768}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MedConnectMongoLib", "MedConnectMongoLib\MedConnectMongoLib.csproj", "{A90C265E-388C-41EA-969A-289CFCAB94CC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -13,5 +17,13 @@ Global
 		{6DE05D40-BDA1-4038-A1EC-8096C50739FA}.Debug|x86.Build.0 = Debug|x86
 		{6DE05D40-BDA1-4038-A1EC-8096C50739FA}.Release|x86.ActiveCfg = Release|x86
 		{6DE05D40-BDA1-4038-A1EC-8096C50739FA}.Release|x86.Build.0 = Release|x86
+		{A90C265E-388C-41EA-969A-289CFCAB94CC}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A90C265E-388C-41EA-969A-289CFCAB94CC}.Debug|x86.Build.0 = Debug|Any CPU
+		{A90C265E-388C-41EA-969A-289CFCAB94CC}.Release|x86.ActiveCfg = Release|Any CPU
+		{A90C265E-388C-41EA-969A-289CFCAB94CC}.Release|x86.Build.0 = Release|Any CPU
+		{D2EB3B55-A157-43BF-A7E1-9C4B8D664768}.Debug|x86.ActiveCfg = Debug|x86
+		{D2EB3B55-A157-43BF-A7E1-9C4B8D664768}.Debug|x86.Build.0 = Debug|x86
+		{D2EB3B55-A157-43BF-A7E1-9C4B8D664768}.Release|x86.ActiveCfg = Release|x86
+		{D2EB3B55-A157-43BF-A7E1-9C4B8D664768}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 EndGlobal

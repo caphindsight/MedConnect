@@ -1,0 +1,14 @@
+﻿{
+    "Mongo" : {
+        "Host" : "medconnect_mongo",
+        "Port" : "27017",
+        "Database" : "MedConnectDb",
+        "RequiresAuthorization" : "false",
+        "Salt" : "debug"
+    },
+
+    "Http" : {
+        "AddrMask" : "localhost",
+        "Port" : "80"
+    }
+}

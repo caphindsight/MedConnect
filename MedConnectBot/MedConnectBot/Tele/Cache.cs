@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-using MedConnectBot.Mongo;
+using MedConnectMongoLib;
 
 namespace MedConnectBot.Tele {
     public static class GlobalCache {

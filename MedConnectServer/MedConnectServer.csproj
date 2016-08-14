@@ -3,10 +3,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
-    <ProjectGuid>{6DE05D40-BDA1-4038-A1EC-8096C50739FA}</ProjectGuid>
+    <ProjectGuid>{D2EB3B55-A157-43BF-A7E1-9C4B8D664768}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>MedConnectBot</RootNamespace>
-    <AssemblyName>MedConnectBot</AssemblyName>
+    <RootNamespace>MedConnectServer</RootNamespace>
+    <AssemblyName>MedConnectServer</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -31,41 +31,33 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="Nancy">
+      <HintPath>..\packages\Nancy.1.4.3\lib\net40\Nancy.dll</HintPath>
+    </Reference>
+    <Reference Include="Nancy.Hosting.Self">
+      <HintPath>..\packages\Nancy.Hosting.Self.1.4.1\lib\net40\Nancy.Hosting.Self.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.Extensions" />
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Net.Http.Formatting">
-      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Net.Http" />
-    <Reference Include="Telegram.Bot">
-      <HintPath>..\packages\Telegram.Bot.10.3.1\lib\net45\Telegram.Bot.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Runtime.Serialization" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
-    <Compile Include="MedConnectBot\Program.cs" />
-    <Compile Include="MedConnectBot\BotConfig.cs" />
-    <Compile Include="MedConnectBot\Tele\BotContext.cs" />
-    <Compile Include="MedConnectBot\Tele\Cache.cs" />
+    <Compile Include="MedConnectServer\Program.cs" />
+    <Compile Include="MedConnectServer\ServerConfig.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <Folder Include="MedConnectBot\" />
-    <Folder Include="MedConnectBot\Tele\" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-    <None Include="bot_config.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <Folder Include="MedConnectServer\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MedConnectMongoLib\MedConnectMongoLib.csproj">
       <Project>{A90C265E-388C-41EA-969A-289CFCAB94CC}</Project>
       <Name>MedConnectMongoLib</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+    <None Include="server_config.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

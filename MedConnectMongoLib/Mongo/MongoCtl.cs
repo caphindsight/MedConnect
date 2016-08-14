@@ -7,7 +7,7 @@ using MongoDB;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
-namespace MedConnectBot.Mongo {
+namespace MedConnectMongoLib {
     public sealed class MongoCtl {
         public MongoCtl(string connectionString, string database) {
             Client_ = new MongoClient(connectionString);
