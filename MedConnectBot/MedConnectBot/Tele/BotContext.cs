@@ -32,7 +32,7 @@ namespace MedConnectBot.Tele {
         private static string NewRecipientMessageText(string name) =>
             BotConfig.Data.Messages.NewRecipientPattern.Replace("{name}", name);
 
-        private static string UnknownCommandMessageText (string command) =>
+        private static string UnknownCommandMessageText(string command) =>
             BotConfig.Data.Messages.UnknownCommandPattern.Replace("{command}", command);
 
         private static string NoRoomsMessageText(long t_id) =>
