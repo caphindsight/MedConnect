@@ -14,8 +14,19 @@ docker run -it --rm --name=medconnect_mongo -v "${DIR}/db:/data/db" -v "${DIR}/d
 docker run -it --rm --name=medconnect_mongo_admin -p 127.0.0.1:1234:1234 --link medconnect_mongo:mongo adicom/admin-mongo
 ;;
 
-"*")
-echo "Usage: bash mongo.sh <mongo-dev/admin-dev>" >&2
+"restore")
+sudo rm -rf mongo
+tar -zxf mongo.tar.gz
+;;
+
+"backup")
+rm -f mongo.tar.gz
+tar -zcf mongo.tar.gz
+;;
+
+*)
+echo "Usage: bash mongo.sh <mongo-dev/admin-dev/archive/restore>" >&2
+;;
 
 esac
 
