@@ -32,8 +32,11 @@ namespace MedConnectBot.Tele {
         private static string NewRecipientMessageText(string name) =>
             BotConfig.Data.Messages.NewRecipientPattern.Replace("{name}", name);
 
-        private static string UnknownCommandMessageText(string command) =>
-            BotConfig.Data.Messages.UnknownCommandPattern.Replace("{command}", command);
+		private static string UnknownCommandMessageText (string command) =>
+		BotConfig.Data.Messages.UnknownCommandPattern.Replace("{command}", command);
+
+		private static string NoRoomsMessageText(long t_id) =>
+		BotConfig.Data.Messages.NoRoomsPattern.Replace("{t_id}", t_id.ToString());
 
         private async Task ForwardToAdmin(long recipientId, Message msg) {
             if (BotConfig.Data.Telegram.ForwardToAdmin && recipientId != BotConfig.Data.Telegram.AdminId) {
@@ -92,8 +95,8 @@ namespace MedConnectBot.Tele {
                 }
             }
 
-            if (rooms.Length == 0) {
-                await ReplyText(Data.Id, BotConfig.Data.Messages.NoRoomsMessage);
+			if (rooms.Length == 0) {
+				await ReplyText(Data.Id, NoRoomsMessageText(Data.Id));
             } else if (Data.Text == "/start" || Data.Text == "/help") {
                 await ReplyText(Data.Id, BotConfig.Data.Messages.HelpMessage);
             } else if (Data.Text == "/select") {
@@ -163,3 +166,4 @@ namespace MedConnectBot.Tele {
         public string Text { get; set; }
     }
 }
+

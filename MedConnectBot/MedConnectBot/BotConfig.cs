@@ -64,8 +64,9 @@ namespace MedConnectBot {
         public string ForwardPattern { get; private set; }
         public string NewRecipientPattern { get; private set; }
         public string UnknownCommandPattern { get; private set; }
-        public string ChooseYourRecipientMessage { get; private set; }
-        public string NoRoomsMessage { get; private set; }
+		public string NoRoomsPattern { get; private set; }
+		public string NoRoomsMessage { get; private set; }
+		public string ChooseYourRecipientMessage { get; private set; }
         public string OnlyDoctorsCanCloseDialogsMessage { get; private set; }
         public string DoctorHasClosedTheDialogMessage { get; private set; }
         public string DialogRemovedMessage { get; private set; }
