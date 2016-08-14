@@ -1,6 +1,8 @@
 FROM mono
 MAINTAINER Cap. Hindsight <hindsight@yandex.ru>
 
+EXPOSE 80
+
 COPY . /MedConnect
 
 WORKDIR /MedConnect
