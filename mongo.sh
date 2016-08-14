@@ -11,7 +11,7 @@ docker run -it --rm --name=medconnect_mongo -v "${DIR}/db:/data/db" -v "${DIR}/d
 ;;
 
 "admin-dev")
-docker run -it --rm --name=medconnect_mongo_admin -p 127.0.0.1:1234:1234 --link mongo:medconnect_mongo adicom/admin-mongo
+docker run -it --rm --name=medconnect_mongo_admin -p 127.0.0.1:1234:1234 --link medconnect_mongo:mongo adicom/admin-mongo
 ;;
 
 "*")
