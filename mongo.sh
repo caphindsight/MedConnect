@@ -21,7 +21,7 @@ tar -zxf mongo.tar.gz
 
 "backup")
 rm -f mongo.tar.gz
-tar -zcf mongo.tar.gz
+tar -zcf mongo.tar.gz mongo
 ;;
 
 *)
