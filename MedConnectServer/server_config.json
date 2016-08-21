@@ -9,6 +9,7 @@
 
     "Http" : {
         "AddrMask" : "localhost",
-        "Port" : "8080"
+        "Port" : "8080",
+        "DebugMode" : "true"
     }
 }

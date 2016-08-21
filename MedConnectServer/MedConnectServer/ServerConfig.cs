@@ -50,6 +50,7 @@ namespace MedConnectServer {
     public sealed class HttpSettings {
         public string AddrMask { get; private set; }
         public string Port { get; private set; }
+        public bool DebugMode { get; private set; }
 
         public string Url {
             get {

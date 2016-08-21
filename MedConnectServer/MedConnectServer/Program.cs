@@ -7,18 +7,13 @@ using Nancy.Hosting.Self;
 using MedConnectMongoLib;
 
 namespace MedConnectServer {
-    public sealed class MyModule : NancyModule {
-        public MyModule() {
-            Get["/"] = _ => $"Salt: {Program.Salt}\n";
-        }
-    }
-
     public static class Program {
         private static readonly MongoCtl Mongo_;
         public static string Salt { get; private set; }
 
         static Program() {
             Mongo_ = new MongoCtl(ServerConfig.Data.Mongo.ConnectionString, ServerConfig.Data.Mongo.Database);
+            StaticConfiguration.DisableErrorTraces = !ServerConfig.Data.Http.DebugMode;
         }
 
         public static void Main(string[] args) {
