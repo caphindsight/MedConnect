@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -15,6 +16,7 @@ namespace MedConnectMongoLib {
 
             Config_ = Database_.GetCollection<BsonDocument>("config");
             Rooms_ = Database_.GetCollection<BsonDocument>("rooms");
+            Doctors_ = Database_.GetCollection<BsonDocument> ("doctors");
         }
 
         private readonly IMongoClient Client_;
@@ -24,6 +26,7 @@ namespace MedConnectMongoLib {
 
         private readonly IMongoCollection<BsonDocument> Config_;
         private readonly IMongoCollection<BsonDocument> Rooms_;
+        private readonly IMongoCollection<BsonDocument> Doctors_;
 
         private async Task Process(IMongoCollection<BsonDocument> collection, BsonDocument filter, Action<BsonDocument> action) {
             using (var cursor = await collection.FindAsync(filter)) {
@@ -111,6 +114,34 @@ namespace MedConnectMongoLib {
             var filter = new BsonDocument();
             filter.Set("r_id", roomId);
             await Rooms_.DeleteOneAsync(filter);
+        }
+
+        public Task<DoctorInfo[]> FindDoctors() {
+            return Collect<DoctorInfo>(Doctors_, EmptyFilter_, (BsonDocument doc) => new DoctorInfo() {
+                TelegramId = Convert.ToInt64(doc.GetValue("t_id").AsString),
+                Name = doc.GetValue("name").AsString,
+                Speciality = doc.GetValue("speciality").AsString,
+                Education = doc.GetValue("education").AsString,
+
+                Courses = (
+                    from bsonCourseVal in doc.GetValue("raise_qualification_courses").AsBsonArray
+                    let bsonCourseDoc = bsonCourseVal.AsBsonDocument
+                    select new RaiseQualificationCourse() {
+                        Name = bsonCourseDoc.GetValue("name").AsString,
+                        Year = bsonCourseDoc.GetValue("year").AsString,
+                        Place = bsonCourseDoc.GetValue("place").AsString,
+                    }
+                ).ToArray(),
+
+                Certificates = (
+                    from bsonCertVal in doc.GetValue("medical_certificates").AsBsonArray
+                    select new MedicalCertificate() {
+                        Name = bsonCertVal.AsBsonDocument.GetValue("name").AsString,
+                    }
+                ).ToArray(),
+
+                Miscellaneous = doc.GetValue("miscellaneous").AsString,
+            });
         }
     }
 

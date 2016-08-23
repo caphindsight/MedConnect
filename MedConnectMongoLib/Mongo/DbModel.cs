@@ -22,4 +22,24 @@ namespace MedConnectMongoLib {
         Client,
         Doctor,
     }
+
+    public sealed class DoctorInfo {
+        public long TelegramId { get; set; }
+        public string Name { get; set; }
+        public string Speciality { get; set; }
+        public string Education { get; set; }
+        public RaiseQualificationCourse[] Courses { get; set; }
+        public MedicalCertificate[] Certificates { get; set; }
+        public string Miscellaneous { get; set; }
+    }
+
+    public sealed class RaiseQualificationCourse {
+        public string Name { get; set; }
+        public string Year { get; set; }
+        public string Place { get; set; }
+    }
+
+    public sealed class MedicalCertificate {
+        public string Name { get; set; }
+    }
 }

@@ -8,17 +8,15 @@ using MedConnectMongoLib;
 
 namespace MedConnectServer {
     public static class Program {
-        private static readonly MongoCtl Mongo_;
         public static string Salt { get; private set; }
 
         static Program() {
-            Mongo_ = new MongoCtl(ServerConfig.Data.Mongo.ConnectionString, ServerConfig.Data.Mongo.Database);
             StaticConfiguration.DisableErrorTraces = !ServerConfig.Data.Http.DebugMode;
         }
 
         public static void Main(string[] args) {
             Console.WriteLine("Checking mongo connection..");
-            Salt = Mongo_.GetSalt().Result;
+            Salt = MongoConnection.MongoCtl.GetSalt().Result;
 
             if (Salt != ServerConfig.Data.Mongo.Salt) {
                 throw new Exception("Invalid salt in mongo configuration");
