@@ -27,19 +27,6 @@
         "OnlyDoctorsCanCloseDialogsMessage" : "Sorry, but only MedConnect doctors can close dialogs.",
         "DoctorHasClosedTheDialogMessage" : "Your doctor has closed this dialog.\nGood bye!",
         "DialogRemovedMessage" : "The dialog has been successfully closed!",
-        "HelpMessage" : "This is a chatbot.
-
-        Supported commands: 
-
-        /start - start chat session 
-        /help - show help message 
-
-        Only doctors can use commands below:
-
-        1. Selecting patient, e.g.
-        /select - select patient to reply 
-
-        2. Ending consultation, e.g. 
-        /over - write to end consultation"
+        "HelpMessage" : "Your ad can be here :)"
     }
 }
