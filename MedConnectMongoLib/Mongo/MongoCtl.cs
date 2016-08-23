@@ -15,6 +15,7 @@ namespace MedConnectMongoLib {
 
             Config_ = Database_.GetCollection<BsonDocument>("config");
             Rooms_ = Database_.GetCollection<BsonDocument>("rooms");
+            Doctors_ = Database_.GetCollection<BsonDocument> ("doctors");
         }
 
         private readonly IMongoClient Client_;
@@ -24,6 +25,7 @@ namespace MedConnectMongoLib {
 
         private readonly IMongoCollection<BsonDocument> Config_;
         private readonly IMongoCollection<BsonDocument> Rooms_;
+        private readonly IMongoCollection<BsonDocument> Doctors_;
 
         private async Task Process(IMongoCollection<BsonDocument> collection, BsonDocument filter, Action<BsonDocument> action) {
             using (var cursor = await collection.FindAsync(filter)) {
