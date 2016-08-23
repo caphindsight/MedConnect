@@ -25,7 +25,7 @@ tar -zcf mongo.tar.gz mongo
 ;;
 
 *)
-echo "Usage: bash mongo.sh <mongo-dev/admin-dev/archive/restore>" >&2
+echo "Usage: bash mongo.sh <mongo-dev/admin-dev/backup/restore>" >&2
 ;;
 
 esac
