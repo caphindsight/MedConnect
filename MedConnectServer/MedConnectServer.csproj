@@ -45,6 +45,7 @@
     <Compile Include="MedConnectServer\Program.cs" />
     <Compile Include="MedConnectServer\ServerConfig.cs" />
     <Compile Include="MedConnectServer\ApiV1.cs" />
+    <Compile Include="MedConnectServer\MongoConnection.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

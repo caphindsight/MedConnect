@@ -30,7 +30,7 @@ namespace MedConnectMongoLib {
         public string Education { get; set; }
         public RaiseQualificationCourse[] Courses { get; set; }
         public MedicalCertificate[] Certificates { get; set; }
-        public string MiscInfo { get; set; }
+        public string Miscellaneous { get; set; }
     }
 
     public sealed class RaiseQualificationCourse {
