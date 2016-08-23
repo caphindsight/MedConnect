@@ -13,9 +13,6 @@ namespace MedConnectServer {
                     Message = "Hello, world!"
                 };
             };
-            Get["/doctors"] = _ => {
-                return 
-            }
         }
     }
 }

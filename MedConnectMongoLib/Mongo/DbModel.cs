@@ -29,8 +29,8 @@ namespace MedConnectMongoLib {
         public string Speciality { get; set; }
         public string Education { get; set; }
         public RaiseQualificationCourse[] Courses { get; set; }
-        public Certificate[] Sertificates { get; set; }
-        public string Miscellaneous { get; set; }
+        public MedicalCertificate[] Certificates { get; set; }
+        public string MiscInfo { get; set; }
     }
 
     public sealed class RaiseQualificationCourse {
@@ -39,7 +39,7 @@ namespace MedConnectMongoLib {
         public string Place { get; set; }
     }
 
-    public sealed class Certificate {
+    public sealed class MedicalCertificate {
         public string Name { get; set; }
     }
 }
