@@ -42,4 +42,8 @@ namespace MedConnectMongoLib {
     public sealed class MedicalCertificate {
         public string Name { get; set; }
     }
+
+    public sealed class MagicHash {
+        public string Value { get; set; }
+    }
 }

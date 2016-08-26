@@ -18,6 +18,7 @@ namespace MedConnectServer {
                 DoctorInfo[] doctors = await MongoConnection.MongoCtl.FindDoctors();
                 return doctors;
             };
+
         }
     }
 }
