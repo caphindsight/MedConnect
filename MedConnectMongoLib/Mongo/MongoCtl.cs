@@ -17,7 +17,7 @@ namespace MedConnectMongoLib {
             Config_ = Database_.GetCollection<BsonDocument>("config");
             Rooms_ = Database_.GetCollection<BsonDocument>("rooms");
             Doctors_ = Database_.GetCollection<BsonDocument>("doctors");
-            MagicHashes_ = Database_.GetCollection<BsonDocument> ("magic_hashes");
+            MagicHashes_ = Database_.GetCollection<BsonDocument>("magic_hashes");
         }
 
         private readonly IMongoClient Client_;
@@ -54,18 +54,20 @@ namespace MedConnectMongoLib {
             return res.ToArray();
         }
 
-        public async Task<MagicHash> GenerateAndStoreMagicHashes(long doctorTelegramId) {
-            Guid magicHash = Guid.NewGuid ();
-            doctorTelegramId = Convert.ToInt64(FindSingleDoctor());
-            var doc = new BsonDocument {
-                { "magic_hash", $"{magicHash}" },
+        public async Task<MagicHash> GenerateAndStoreMagicHashes(DoctorInfo doctor) {
+            string magicHash = Guid.NewGuid().ToString().Substring(0, 6);
+            var document = new BsonDocument {
+                { "magic_hash", magicHash },
                 {"doctor", new BsonDocument {
-                        { "telegram_id", $"{doctorTelegramId}" },
+                        { "telegram_id", doctor.TelegramId.ToString() },
                         { "displayed_name", "nastya" }
-                        }
+                     }
                 }
             };
-            await MagicHashes_.InsertOneAsync(doc);
+            await MagicHashes_.InsertOneAsync(document);
+            return new MagicHash {
+                Value = magicHash,
+            };
         }
 
         public async Task<string> GetSalt() {
@@ -132,10 +134,17 @@ namespace MedConnectMongoLib {
             await Rooms_.DeleteOneAsync(filter);
         }
 
-        public Task<DoctorInfo[]> FindSingleDoctor() {
-            return Collect<DoctorInfo> (Doctors_, EmptyFilter_, (BsonDocument doc) => new DoctorInfo () {
-                TelegramId = Convert.ToInt64 (doc.GetValue ("t_id").AsString),
+        public async Task<DoctorInfo> FindSingleDoctor(long telegramId) {
+            DoctorInfo[] doctors = await Collect<DoctorInfo>(Doctors_, EmptyFilter_, (BsonDocument doc) => new DoctorInfo () {
+                TelegramId = Convert.ToInt64(doc.GetValue("t_id").AsString),
             });
+            if (doctors.Length > 1) {
+                throw new Exception("too much doctors");
+            } else if (doctors.Length == 0) {
+                return null;
+            } else {
+                return doctors[0];
+            }
         }
 
         public Task<DoctorInfo[]> FindDoctors() {

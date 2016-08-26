@@ -19,6 +19,15 @@ namespace MedConnectServer {
                 return doctors;
             };
 
+            Post["/consult", true] = async (p, x) => {
+                dynamic args = this.Bind<DynamicDictionary>();
+                long tid = Convert.ToInt64(args.TelegramId);
+                DoctorInfo doctor =  await MongoConnection.MongoCtl.FindSingleDoctor(tid);
+                MagicHash magicHash = await MongoConnection.MongoCtl.GenerateAndStoreMagicHashes(doctor);
+                return new {
+                    MagicHash = magicHash,
+                };
+            };
         }
     }
 }
