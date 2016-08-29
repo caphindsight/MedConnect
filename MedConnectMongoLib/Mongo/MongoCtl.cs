@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -135,16 +136,10 @@ namespace MedConnectMongoLib {
         }
 
         public async Task<DoctorInfo> FindSingleDoctor(long telegramId) {
-            DoctorInfo[] doctors = await Collect<DoctorInfo>(Doctors_, EmptyFilter_, (BsonDocument doc) => new DoctorInfo () {
+            DoctorInfo[] doctors = await Collect<DoctorInfo> (Doctors_, EmptyFilter_, (BsonDocument doc) => new DoctorInfo () {
                 TelegramId = Convert.ToInt64(doc.GetValue("t_id").AsString),
             });
-            if (doctors.Length > 1) {
-                throw new Exception("too much doctors");
-            } else if (doctors.Length == 0) {
-                return null;
-            } else {
-                return doctors[0];
-            }
+            return doctors[0];
         }
 
         public Task<DoctorInfo[]> FindDoctors() {
