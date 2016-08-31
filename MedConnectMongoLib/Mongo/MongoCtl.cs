@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -71,6 +70,14 @@ namespace MedConnectMongoLib {
             };
         }
 
+        //test version (takes only the first hash in magic_hashes)
+        public async Task<MagicHash> GetMagicHash(string magicHash) {
+            MagicHash[] Hash = await Collect<MagicHash>(MagicHashes_, EmptyFilter_, (BsonDocument doc) => new MagicHash() {
+                Value = doc.GetValue("magic_hash").AsString,
+            });
+            return Hash[0];
+        }
+
         public async Task<string> GetSalt() {
             string salt = null;
             await Process(Config_, EmptyFilter_, (BsonDocument doc) => {
@@ -136,7 +143,7 @@ namespace MedConnectMongoLib {
         }
 
         public async Task<DoctorInfo> FindSingleDoctor(long telegramId) {
-            DoctorInfo[] doctors = await Collect<DoctorInfo> (Doctors_, EmptyFilter_, (BsonDocument doc) => new DoctorInfo () {
+            DoctorInfo[] doctors = await Collect<DoctorInfo>(Doctors_, EmptyFilter_, (BsonDocument doc) => new DoctorInfo () {
                 TelegramId = Convert.ToInt64(doc.GetValue("t_id").AsString),
             });
             return doctors[0];

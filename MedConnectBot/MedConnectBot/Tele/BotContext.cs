@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -41,6 +42,28 @@ namespace MedConnectBot.Tele {
         private async Task ForwardToAdmin(long recipientId, Message msg) {
             if (BotConfig.Data.Telegram.ForwardToAdmin && recipientId != BotConfig.Data.Telegram.AdminId) {
                 await Bot.ForwardMessageAsync(BotConfig.Data.Telegram.AdminId, msg.Chat.Id, msg.MessageId);
+            }
+        }
+
+        private static bool IsGUID(string expression) {
+            if (expression != null) {
+                Regex guidRegEx = new Regex(@"^(\{{0,1}([0-9a-f]){6}$");
+                return guidRegEx.IsMatch(expression);
+            }
+            return false;
+        }
+
+        //test version (sending hash to admin)
+        private async Task FindAndTransferMagicHash(long recipientId, string text, string magicHash) {
+            Message msg = await Bot.SendTextMessageAsync(recipientId, text);
+            bool pattern = IsGUID(magicHash);
+            string Hash = Convert.ToString(Mongo.GetMagicHash(magicHash));
+            if (pattern && (msg.Text == Hash)) {
+                try {
+                    await Bot.SendTextMessageAsync(BotConfig.Data.Telegram.AdminId, msg.Text);
+                } catch (Exception e) {
+                    await ReportErrorToAdmin(e);
+                }
             }
         }
 

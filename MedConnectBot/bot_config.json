@@ -22,7 +22,8 @@
         "ForwardPattern" : "{name} writes:\n{text}",
         "NewRecipientPattern" : "From now on your messages will be forwarded to {name} until you type /chat command.",
         "UnknownCommandPattern" : "Unsupported command: {command}",
-        "NoRoomsPattern" : "Sorry, but you haven't been registered in MedConnect database. By the way, your telegram id is {t_id}.",
+        "NoRoomsPattern" : "Sorry, but you haven't been registered in MedConnect database./
+                            By the way, your telegram id is {t_id}. Please, enter magicHash",
         "ChooseYourRecipientMessage" : "Please choose your recipient from the list below:",
         "OnlyDoctorsCanCloseDialogsMessage" : "Sorry, but only MedConnect doctors can close dialogs.",
         "DoctorHasClosedTheDialogMessage" : "Your doctor has closed this dialog.\nGood bye!",
