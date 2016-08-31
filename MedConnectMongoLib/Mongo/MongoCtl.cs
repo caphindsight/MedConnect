@@ -72,10 +72,10 @@ namespace MedConnectMongoLib {
 
         //test version (takes only the first hash in magic_hashes)
         public async Task<MagicHash> GetMagicHash(string magicHash) {
-            MagicHash[] Hash = await Collect<MagicHash>(MagicHashes_, EmptyFilter_, (BsonDocument doc) => new MagicHash() {
+            MagicHash[] hash = await Collect<MagicHash>(MagicHashes_, EmptyFilter_, (BsonDocument doc) => new MagicHash() {
                 Value = doc.GetValue("magic_hash").AsString,
             });
-            return Hash[0];
+            return hash[0];
         }
 
         public async Task<string> GetSalt() {

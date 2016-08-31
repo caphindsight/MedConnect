@@ -16,6 +16,13 @@ using Telegram.Bot.Types.ReplyMarkups;
 using MedConnectMongoLib;
 
 namespace MedConnectBot.Tele {
+    public sealed class MagicHash {
+        private static readonly Regex GuidRegex_ = new Regex(@"^[a-zA-Z0-9]{6}$");
+        private static bool IsMagicHashCandidate(string expression) {
+            return expression != null && GuidRegex_.IsMatch(expression);
+        }
+    }
+
     public sealed class BotContext {
         public TelegramBotClient Bot { get; private set; }
         public MongoCtl Mongo { get; private set; }
@@ -45,22 +52,16 @@ namespace MedConnectBot.Tele {
             }
         }
 
-        private static bool IsGUID(string expression) {
-            if (expression != null) {
-                Regex guidRegEx = new Regex(@"^(\{{0,1}([0-9a-f]){6}$");
-                return guidRegEx.IsMatch(expression);
-            }
-            return false;
-        }
-
         //test version (sending hash to admin)
         private async Task FindAndTransferMagicHash(long recipientId, string text, string magicHash) {
-            Message msg = await Bot.SendTextMessageAsync(recipientId, text);
-            bool pattern = IsGUID(magicHash);
-            string Hash = Convert.ToString(Mongo.GetMagicHash(magicHash));
-            if (pattern && (msg.Text == Hash)) {
+            bool pattern = MagicHash.IsMagicHashCandidate(magicHash);
+            MagicHash hash = new MagicHash() {
+                Value = magicHash,
+            };
+            //string hash = Convert.ToString(Mongo.GetMagicHash(magicHash));
+            if (pattern && (Message.Text == hash)) {
                 try {
-                    await Bot.SendTextMessageAsync(BotConfig.Data.Telegram.AdminId, msg.Text);
+                    await Bot.SendTextMessageAsync(BotConfig.Data.Telegram.AdminId, Message.Text);
                 } catch (Exception e) {
                     await ReportErrorToAdmin(e);
                 }
