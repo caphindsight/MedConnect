@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -16,13 +15,6 @@ using Telegram.Bot.Types.ReplyMarkups;
 using MedConnectMongoLib;
 
 namespace MedConnectBot.Tele {
-    public sealed class MagicHash {
-        private static readonly Regex GuidRegex_ = new Regex(@"^[a-zA-Z0-9]{6}$");
-        private static bool IsMagicHashCandidate(string expression) {
-            return expression != null && GuidRegex_.IsMatch(expression);
-        }
-    }
-
     public sealed class BotContext {
         public TelegramBotClient Bot { get; private set; }
         public MongoCtl Mongo { get; private set; }
@@ -53,15 +45,14 @@ namespace MedConnectBot.Tele {
         }
 
         //test version (sending hash to admin)
-        private async Task FindAndTransferMagicHash(long recipientId, string text, string magicHash) {
-            bool pattern = MagicHash.IsMagicHashCandidate(magicHash);
+        private async Task FindAndTransferMagicHash(string magicHash) {
             MagicHash hash = new MagicHash() {
                 Value = magicHash,
             };
-            //string hash = Convert.ToString(Mongo.GetMagicHash(magicHash));
-            if (pattern && (Message.Text == hash)) {
+            Message msg;
+            if (MagicHash.IsMagicHashCandidate(magicHash) && msg.Text == hash.ToString()) {
                 try {
-                    await Bot.SendTextMessageAsync(BotConfig.Data.Telegram.AdminId, Message.Text);
+                    await Bot.SendTextMessageAsync(BotConfig.Data.Telegram.AdminId, msg.Text);
                 } catch (Exception e) {
                     await ReportErrorToAdmin(e);
                 }
@@ -123,6 +114,7 @@ namespace MedConnectBot.Tele {
                 await ReplyText(Data.Id, NoRoomsMessageText(Data.Id));
             } else if (Data.Text == "/start" || Data.Text == "/help") {
                 await ReplyText(Data.Id, BotConfig.Data.Messages.HelpMessage);
+                await FindAndTransferMagicHash(Data.Text);
             } else if (Data.Text == "/select") {
                 await ReplyKeyboard(rooms);
             } else if (Data.Text == "/over") {

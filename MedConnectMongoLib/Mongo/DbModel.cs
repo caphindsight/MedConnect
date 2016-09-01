@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace MedConnectMongoLib {
     public sealed class Room {
@@ -45,5 +46,9 @@ namespace MedConnectMongoLib {
 
     public sealed class MagicHash {
         public string Value { get; set; }
+        private static readonly Regex GuidRegex_ = new Regex(@"^[a-zA-Z0-9]{6}$");
+        public static bool IsMagicHashCandidate(string expression) {
+            return expression != null && GuidRegex_.IsMatch(expression);
+        }
     }
 }
