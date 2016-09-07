@@ -49,10 +49,9 @@ namespace MedConnectBot.Tele {
             MagicHash hash = new MagicHash() {
                 Value = magicHash,
             };
-            Message msg;
-            if (MagicHash.IsMagicHashCandidate(magicHash) && msg.Text == hash.ToString()) {
+            if (MagicHash.IsMagicHashCandidate(Data.Message.Text) && Data.Message.Text == hash.ToString()) {
                 try {
-                    await Bot.SendTextMessageAsync(BotConfig.Data.Telegram.AdminId, msg.Text);
+                    await Bot.SendTextMessageAsync(BotConfig.Data.Telegram.AdminId, Data.Message.Text);
                 } catch (Exception e) {
                     await ReportErrorToAdmin(e);
                 }
@@ -112,9 +111,9 @@ namespace MedConnectBot.Tele {
 
             if (rooms.Length == 0) {
                 await ReplyText(Data.Id, NoRoomsMessageText(Data.Id));
+                await FindAndTransferMagicHash(Data.Text);
             } else if (Data.Text == "/start" || Data.Text == "/help") {
                 await ReplyText(Data.Id, BotConfig.Data.Messages.HelpMessage);
-                await FindAndTransferMagicHash(Data.Text);
             } else if (Data.Text == "/select") {
                 await ReplyKeyboard(rooms);
             } else if (Data.Text == "/over") {

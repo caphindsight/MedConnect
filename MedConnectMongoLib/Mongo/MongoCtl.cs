@@ -54,13 +54,29 @@ namespace MedConnectMongoLib {
             return res.ToArray();
         }
 
+        public async Task<Room> CreateRoom(RoomMember member) {
+            string roomId = Guid.NewGuid().ToString().Substring(0, 4);
+            var document = new BsonDocument {
+                { "r_id", roomId }, { "members", new BsonDocument {
+                        { "t_id", member.TelegramId.ToString () },
+                        { "name", member.Name },
+                        { "role", member.Role }
+                    }
+                }
+            };
+            await Rooms_.InsertOneAsync(document);
+            return new Room {
+                RoomId = roomId,
+            };
+        }
+
         public async Task<MagicHash> GenerateAndStoreMagicHashes(DoctorInfo doctor) {
             string magicHash = Guid.NewGuid().ToString().Substring(0, 6);
             var document = new BsonDocument {
                 { "magic_hash", magicHash },
                 {"doctor", new BsonDocument {
                         { "telegram_id", doctor.TelegramId.ToString() },
-                        { "displayed_name", "nastya" }
+                        { "name", doctor.Name }
                      }
                 }
             };

@@ -27,7 +27,6 @@ namespace MedConnectServer {
                     MagicHash = magicHash,
                 };
             };
-        }
 
         public struct ConsultRequest {
             public long TelegramId;
