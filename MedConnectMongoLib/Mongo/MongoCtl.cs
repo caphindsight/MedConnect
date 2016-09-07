@@ -68,7 +68,7 @@ namespace MedConnectMongoLib {
             };
             await Rooms_.InsertOneAsync(document);
             return new Room {
-                RoomId = magicHash,
+                RoomId = roomId,
             };
         }
 */
