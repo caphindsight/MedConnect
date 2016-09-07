@@ -16,6 +16,7 @@ namespace MedConnectMongoLib {
     public sealed class RoomMember {
         public long TelegramId { get; set; }
         public string Name { get; set; }
+        public string DisplayedName { get; set; }
         public MemberRole Role { get; set; }
     }
 
@@ -27,6 +28,7 @@ namespace MedConnectMongoLib {
     public sealed class DoctorInfo {
         public long TelegramId { get; set; }
         public string Name { get; set; }
+        public string DisplayedName { get; set; }
         public string Speciality { get; set; }
         public string Education { get; set; }
         public RaiseQualificationCourse[] Courses { get; set; }

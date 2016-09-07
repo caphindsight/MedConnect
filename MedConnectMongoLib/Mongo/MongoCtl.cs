@@ -24,6 +24,7 @@ namespace MedConnectMongoLib {
         private readonly IMongoDatabase Database_;
 
         private readonly BsonDocument EmptyFilter_ = new BsonDocument();
+//        private readonly BsonDocument MagicFilter_ = Builders<BsonDocument>.Filter.Eq(<field>, <value>);
 
         private readonly IMongoCollection<BsonDocument> Config_;
         private readonly IMongoCollection<BsonDocument> Rooms_;
@@ -54,30 +55,31 @@ namespace MedConnectMongoLib {
             return res.ToArray();
         }
 
-        public async Task<Room> CreateRoom(RoomMember member) {
-            string roomId = Guid.NewGuid().ToString().Substring(0, 4);
+/*        public async Task<Room> CreateRoom(RoomMember member) {
+            string roomId = await GetMagicHash(...); // просто идея, чтобы не плодить сущностей. 
             var document = new BsonDocument {
                 { "r_id", roomId }, { "members", new BsonDocument {
                         { "t_id", member.TelegramId.ToString () },
                         { "name", member.Name },
+                        { "displayed_name", member.DisplayedName },
                         { "role", member.Role }
                     }
                 }
             };
             await Rooms_.InsertOneAsync(document);
             return new Room {
-                RoomId = roomId,
+                RoomId = magicHash,
             };
         }
-
+*/
         public async Task<MagicHash> GenerateAndStoreMagicHashes(DoctorInfo doctor) {
             string magicHash = Guid.NewGuid().ToString().Substring(0, 6);
             var document = new BsonDocument {
                 { "magic_hash", magicHash },
                 {"doctor", new BsonDocument {
                         { "telegram_id", doctor.TelegramId.ToString() },
-                        { "name", doctor.Name }
-                     }
+                        { "displayed_name", doctor.DisplayedName }
+                    }
                 }
             };
             await MagicHashes_.InsertOneAsync(document);
@@ -86,14 +88,12 @@ namespace MedConnectMongoLib {
             };
         }
 
-        //test version (takes only the first hash in magic_hashes)
-        public async Task<MagicHash> GetMagicHash(string magicHash) {
-            MagicHash[] hash = await Collect<MagicHash>(MagicHashes_, EmptyFilter_, (BsonDocument doc) => new MagicHash() {
+/*        public async Task<MagicHash> GetMagicHash() {
+            MagicHash[] hash = await Collect<MagicHash>(MagicHashes_, MagicFilter_, (BsonDocument doc) => new MagicHash() {
                 Value = doc.GetValue("magic_hash").AsString,
             });
-            return hash[0];
         }
-
+*/
         public async Task<string> GetSalt() {
             string salt = null;
             await Process(Config_, EmptyFilter_, (BsonDocument doc) => {
@@ -158,11 +158,13 @@ namespace MedConnectMongoLib {
             await Rooms_.DeleteOneAsync(filter);
         }
 
-        public async Task<DoctorInfo> FindSingleDoctor(long telegramId) {
+        public async Task<DoctorInfo> FindSingleDoctor(long telegramId, string name) {
             DoctorInfo[] doctors = await Collect<DoctorInfo>(Doctors_, EmptyFilter_, (BsonDocument doc) => new DoctorInfo () {
                 TelegramId = Convert.ToInt64(doc.GetValue("t_id").AsString),
+                DisplayedName = doc.GetValue("displayed_name").AsString,
             });
-            return doctors[0];
+            return doctors.First(); // || doctors.Last(); Возвращаем только одного - cool. Но это не подходит. 
+                                    // Надо придумать, как всех по очереди возвращать, чтобы в UI с кнопками синхронизировать. 
         }
 
         public Task<DoctorInfo[]> FindDoctors() {

@@ -10,26 +10,28 @@ namespace MedConnectServer {
         public ApiV1()
             : base("/api/v1")
         {
-            Get["/hello"] = _ => new {
+            Get ["/hello"] = _ => new {
                     Message = "Hello, world!"
             };
 
-            Get["/doctors", true] = async (p, x) => {
+            Get ["/doctors", true] = async (p, x) => {
                 DoctorInfo[] doctors = await MongoConnection.MongoCtl.FindDoctors();
                 return doctors;
             };
 
-            Post["/consult", true] = async (p, x) => {
+            Post ["/consult", true] = async (p, x) => {
                 ConsultRequest request = this.Bind<ConsultRequest>();
-                DoctorInfo doctor =  await MongoConnection.MongoCtl.FindSingleDoctor(request.TelegramId);
+                DoctorInfo doctor = await MongoConnection.MongoCtl.FindSingleDoctor(request.TelegramId, request.DisplayedName);
                 MagicHash magicHash = await MongoConnection.MongoCtl.GenerateAndStoreMagicHashes(doctor);
                 return new {
                     MagicHash = magicHash,
                 };
             };
+        }
 
         public struct ConsultRequest {
             public long TelegramId;
+            public string DisplayedName;
         }
     }
 }
